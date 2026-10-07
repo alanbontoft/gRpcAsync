@@ -20,6 +20,8 @@ public class SubscriptionManager
 
     public readonly SemaphoreSlim ConnectionSemaphore = new SemaphoreSlim(0, 1);
 
+    public bool Connected { get; private set; } = false;
+
     public Guid AddSubscriber(string clientId, IServerStreamWriter<EventMessage> stream)
     {
         var id = Guid.NewGuid();
@@ -50,6 +52,16 @@ public class SubscriptionManager
             {
                 // disconnected
             }
+        }
+    }
+
+    public void SetConnected(bool connected)
+    {
+        Connected = connected;
+
+        if (Connected)
+        {
+            ConnectionSemaphore.Release();
         }
     }
 }

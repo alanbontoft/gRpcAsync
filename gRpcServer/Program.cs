@@ -38,22 +38,25 @@ class Program
 
             while (true)
             {
-
+                // wait for a connection
                 await subscriptions.ConnectionSemaphore.WaitAsync();
 
-                var delay = random.Next(1000, 10000);
+                while (subscriptions.Connected)
+                {
+                    var delay = random.Next(1000, 10000);
 
-                Console.WriteLine($"Delay: {delay}");
+                    Console.WriteLine($"Delay: {delay}");
 
-                await Task.Delay(delay);
+                    await Task.Delay(delay);
 
-                await subscriptions.BroadcastAsync(
-                    new EventMessage
-                    {
-                        Delay = delay,
-                        EventType = "CycleComplete",
-                        Message = $"Part {++count} finished"
-                    });
+                    await subscriptions.BroadcastAsync(
+                        new EventMessage
+                        {
+                            Delay = delay,
+                            EventType = "CycleComplete",
+                            Message = $"Part {++count} finished"
+                        });
+                }
             }
         });
 

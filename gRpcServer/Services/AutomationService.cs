@@ -46,7 +46,9 @@ public class AutomationServiceImpl : AutomationService.AutomationServiceBase
 
         Console.WriteLine( $"Connected: {request.ClientId}");
 
-        _subscriptions.ConnectionSemaphore.Release();
+        _subscriptions.SetConnected(true);
+
+        // _subscriptions.ConnectionSemaphore.Release();
 
         try
         {
@@ -61,6 +63,9 @@ public class AutomationServiceImpl : AutomationService.AutomationServiceBase
             _subscriptions.RemoveSubscriber(id);
 
             Console.WriteLine($"Disconnected: {request.ClientId}");
+
+            _subscriptions.SetConnected(false);
+
         }
     }
 }
