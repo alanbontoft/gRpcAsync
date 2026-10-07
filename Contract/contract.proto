@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option csharp_namespace = "RpcAsync";
+
+service AutomationService {
+    rpc GetStatus(StatusRequest) returns (StatusReply);
+
+    rpc Subscribe(EventSubscription)
+        returns (stream EventMessage);
+}
+
+message StatusRequest {
+    string machineId = 1;
+}
+
+message StatusReply {
+    bool running = 1;
+    int32 partCount = 2;
+    repeated int32 data = 3;
+}
+
+message EventSubscription {
+    string clientId = 1;
+}
+
+message EventMessage {
+    string eventType = 1;
+    string message = 2;
+    int32 delay = 3;
+}
